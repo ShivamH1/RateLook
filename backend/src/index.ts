@@ -5,7 +5,7 @@ import { jwtPlugin } from "./middleware/jwt";
 import { authRoutes } from "./routes/auth";
 import { analyzePhotoRoutes } from "./routes/analyze-photo";
 
-const app = new Elysia()
+export const app = new Elysia()
   .onError(({ code, error, set }) => {
     console.error(`Elysia Error [${code}]:`, error);
     set.status = 500;
@@ -13,7 +13,7 @@ const app = new Elysia()
   })
   .use(
     cors({
-      origin: ["http://localhost:8080"],
+      origin: true, // Allow all for now, can be restricted in prod
       credentials: true,
       allowedHeaders: ["Content-Type", "Authorization"],
     }),
@@ -21,9 +21,13 @@ const app = new Elysia()
   .use(swagger())
   .use(jwtPlugin)
   .use(authRoutes)
-  .use(analyzePhotoRoutes)
-  .listen(3000);
+  .use(analyzePhotoRoutes);
+
+const port = process.env.PORT || 3000;
+app.listen(port);
 
 console.log(
   `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`,
 );
+
+export default app;

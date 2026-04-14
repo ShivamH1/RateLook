@@ -49,7 +49,8 @@ const Index = () => {
         reader.readAsDataURL(photoFile);
       });
 
-      const response = await fetch("http://localhost:3000/api/analyze-photo", {
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
+      const response = await fetch(`${API_URL}/analyze-photo`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ image: base64 }),
