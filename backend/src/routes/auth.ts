@@ -1,4 +1,5 @@
 import { Elysia, t } from "elysia";
+import bcrypt from "bcryptjs";
 import { db } from "../db";
 import { users, profiles } from "../db/schema";
 import { eq } from "drizzle-orm";
@@ -19,7 +20,7 @@ export const authRoutes = new Elysia({ prefix: "/api/auth" })
       }
 
       // Hash password
-      const passwordHash = await Bun.password.hash(password);
+      const passwordHash = await bcrypt.hash(password, 10);
 
       // Create user
       const [newUser] = await db.insert(users).values({ email, passwordHash }).returning();
@@ -62,7 +63,7 @@ export const authRoutes = new Elysia({ prefix: "/api/auth" })
         return { error: "Invalid email or password" };
       }
 
-      const isMatch = await Bun.password.verify(password, user.passwordHash);
+      const isMatch = await bcrypt.compare(password, user.passwordHash);
       if (!isMatch) {
         set.status = 400;
         return { error: "Invalid email or password" };
