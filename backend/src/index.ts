@@ -9,7 +9,7 @@ export const app = new Elysia()
   .onError(({ code, error, set }) => {
     console.error(`Elysia Error [${code}]:`, error);
     set.status = 500;
-    return { error: error.message || error.toString() };
+    return { error: (error as any).message || error.toString() };
   })
   .use(
     cors({

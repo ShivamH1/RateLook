@@ -106,7 +106,7 @@ export const authRoutes = new Elysia({ prefix: "/api/auth" })
       return { error: "Unauthorized" };
     }
 
-    const payload = await jwt.verify(token);
+    const payload = await jwt.verify(token as string);
     if (!payload || !payload.sub) {
       set.status = 401;
       return { error: "Unauthorized" };

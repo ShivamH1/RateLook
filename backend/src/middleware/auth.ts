@@ -10,7 +10,7 @@ export const authPlugin = new Elysia()
     if (!token) return { userId: null };
     
     try {
-      const payload = await jwt.verify(token);
+      const payload = await jwt.verify(token as string);
       console.log("Auth Middleware - Payload:", payload);
       
       if (!payload || !payload.sub) {

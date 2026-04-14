@@ -23,7 +23,7 @@ export const analyzePhotoRoutes = new Elysia({ prefix: "/api/analyze-photo" })
   .use(authPlugin)
   .post(
     "/",
-    async ({ body: { image }, userId, set }) => {
+    async ({ body: { image }, userId, set }: any) => {
       const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
       if (!GEMINI_API_KEY) {
         set.status = 500;
@@ -160,7 +160,7 @@ export const analyzePhotoRoutes = new Elysia({ prefix: "/api/analyze-photo" })
         return { error: `AI Gateway error: ${response.status}` };
       }
 
-      const aiData = await response.json();
+      const aiData = await response.json() as any;
       const toolCall = aiData.choices?.[0]?.message?.tool_calls?.[0];
       if (!toolCall?.function?.arguments) {
         set.status = 500;
