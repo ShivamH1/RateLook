@@ -1,19 +1,26 @@
 import { Elysia } from "elysia";
-import { jwt } from "@elysiajs/jwt";
+import { jwtPlugin } from "./jwt";
 
 export const authPlugin = new Elysia()
-  .use(
-    jwt({
-      name: "jwt",
-      secret: process.env.JWT_SECRET || "default-secret",
-    })
-  )
+  .use(jwtPlugin)
   .derive(async ({ jwt, cookie: { auth_session } }) => {
     const token = auth_session.value;
+    console.log(`Auth Middleware - Checking cookie 'auth_session':`, token ? "Found" : "NOT FOUND");
+    
     if (!token) return { userId: null };
     
-    const payload = await jwt.verify(token);
-    if (!payload || !payload.sub) return { userId: null };
-    
-    return { userId: payload.sub as string };
+    try {
+      const payload = await jwt.verify(token);
+      console.log("Auth Middleware - Payload:", payload);
+      
+      if (!payload || !payload.sub) {
+        console.log("Auth Middleware - Verification failed or sub missing");
+        return { userId: null };
+      }
+      
+      return { userId: payload.sub as string };
+    } catch (err) {
+      console.error("Auth Middleware - Verification Error:", err);
+      return { userId: null };
+    }
   });

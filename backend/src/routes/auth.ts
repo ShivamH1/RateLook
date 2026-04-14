@@ -2,15 +2,10 @@ import { Elysia, t } from "elysia";
 import { db } from "../db";
 import { users, profiles } from "../db/schema";
 import { eq } from "drizzle-orm";
-import { jwt } from "@elysiajs/jwt";
+import { jwtPlugin } from "../middleware/jwt";
 
 export const authRoutes = new Elysia({ prefix: "/api/auth" })
-  .use(
-    jwt({
-      name: "jwt",
-      secret: process.env.JWT_SECRET || "default-secret",
-    })
-  )
+  .use(jwtPlugin)
   .post(
     "/signup",
     async ({ body, jwt, cookie: { auth_session }, set }) => {
@@ -95,7 +90,13 @@ export const authRoutes = new Elysia({ prefix: "/api/auth" })
     }
   )
   .post("/signout", ({ cookie: { auth_session } }) => {
-    auth_session.remove();
+    auth_session.set({
+      value: "",
+      httpOnly: true,
+      maxAge: 0,
+      path: "/",
+      sameSite: "lax",
+    });
     return { message: "Signed out successfully" };
   })
   .get("/me", async ({ jwt, cookie: { auth_session }, set }) => {

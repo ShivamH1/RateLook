@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Mail, Lock, User, Sparkles, ArrowRight, Loader2 } from "lucide-react";
+import { Mail, Lock, User, Sparkles, ArrowRight, Loader2, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
@@ -37,19 +37,29 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4" style={{ background: "var(--gradient-dark)" }}>
+      <button 
+        onClick={() => navigate("/")}
+        className="absolute top-8 left-8 p-2 rounded-xl glass hover:bg-surface-hover transition-all group"
+      >
+        <ArrowLeft className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
+      </button>
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-sm space-y-8"
       >
         {/* Logo */}
-        <div className="text-center space-y-2">
-          <h1 className="font-display font-bold text-3xl">
-            Rate<span className="text-gradient-gold">Look</span>
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            AI-powered aesthetic analysis
-          </p>
+        <div className="text-center space-y-3 flex flex-col items-center">
+          <img src="/logo.png" alt="RateLook Logo" className="w-16 h-16 rounded-2xl shadow-glow mb-2" />
+          <div className="space-y-1">
+            <h1 className="font-display font-bold text-3xl">
+              Rate<span className="text-gradient-gold">Look</span>
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              AI-powered aesthetic analysis
+            </p>
+          </div>
         </div>
 
         {/* Auth Card */}

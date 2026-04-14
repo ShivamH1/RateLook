@@ -1,28 +1,26 @@
 import { Elysia } from "elysia";
 import { cors } from "@elysiajs/cors";
 import { swagger } from "@elysiajs/swagger";
-import { jwt } from "@elysiajs/jwt";
+import { jwtPlugin } from "./middleware/jwt";
 import { authRoutes } from "./routes/auth";
-import { analysesRoutes } from "./routes/analyses";
 import { analyzePhotoRoutes } from "./routes/analyze-photo";
 
 const app = new Elysia()
+  .onError(({ code, error, set }) => {
+    console.error(`Elysia Error [${code}]:`, error);
+    set.status = 500;
+    return { error: error.message || error.toString() };
+  })
   .use(
     cors({
-      origin: "http://localhost:5173", // Assuming Vite default
+      origin: ["http://localhost:8080"],
       credentials: true,
       allowedHeaders: ["Content-Type", "Authorization"],
     }),
   )
   .use(swagger())
-  .use(
-    jwt({
-      name: "jwt",
-      secret: process.env.JWT_SECRET || "default-secret",
-    }),
-  )
+  .use(jwtPlugin)
   .use(authRoutes)
-  .use(analysesRoutes)
   .use(analyzePhotoRoutes)
   .listen(3000);
 

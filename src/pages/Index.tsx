@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader2, ArrowLeft, Sparkles, History, LogOut, User } from "lucide-react";
+import { Loader2, ArrowLeft, Sparkles, LogOut, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import PhotoUpload from "@/components/PhotoUpload";
@@ -17,6 +17,9 @@ const Index = () => {
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const [guestUploadCount, setGuestUploadCount] = useState(() => 
+    parseInt(localStorage.getItem("upload_count") || "0")
+  );
 
   const handlePhotoSelected = useCallback((file: File, preview: string) => {
     setPhotoFile(file);
@@ -25,6 +28,17 @@ const Index = () => {
 
   const analyzePhoto = async () => {
     if (!photoFile) return;
+
+    // Check for free upload limit for guest users
+    if (!user) {
+      const uploadCount = parseInt(localStorage.getItem("upload_count") || "0");
+      if (uploadCount >= 1) {
+        toast.info("You've used your free analysis. Please sign in to continue!");
+        navigate("/auth");
+        return;
+      }
+    }
+
     setStep("analyzing");
 
     try {
@@ -50,6 +64,13 @@ const Index = () => {
       const data = await response.json();
       setResult(data as AnalysisResult);
       setStep("results");
+
+      // Increment upload count for guest users after successful analysis
+      if (!user) {
+        const nextCount = guestUploadCount + 1;
+        setGuestUploadCount(nextCount);
+        localStorage.setItem("upload_count", nextCount.toString());
+      }
     } catch (err) {
       console.error("Analysis failed:", err);
       toast.error("Analysis failed. Please try again.");
@@ -80,28 +101,22 @@ const Index = () => {
                 <ArrowLeft className="w-5 h-5 text-muted-foreground" />
               </button>
             )}
-            <h1 className="font-display font-bold text-lg">
-              Rate<span className="text-gradient-gold">Look</span>
-            </h1>
+            <div className="flex items-center gap-2">
+              <img src="/logo.png" alt="RateLook Logo" className="w-8 h-8 rounded-lg" />
+              <h1 className="font-display font-bold text-lg">
+                Rate<span className="text-gradient-gold">Look</span>
+              </h1>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             {user && (
-              <>
-                <button
-                  onClick={() => navigate("/history")}
-                  className="p-2 rounded-lg hover:bg-surface-hover transition-colors"
-                  title="History"
-                >
-                  <History className="w-4 h-4 text-muted-foreground" />
-                </button>
-                <button
-                  onClick={handleSignOut}
-                  className="p-2 rounded-lg hover:bg-surface-hover transition-colors"
-                  title="Sign Out"
-                >
-                  <LogOut className="w-4 h-4 text-muted-foreground" />
-                </button>
-              </>
+              <button
+                onClick={handleSignOut}
+                className="p-2 rounded-lg hover:bg-surface-hover transition-colors"
+                title="Sign Out"
+              >
+                <LogOut className="w-4 h-4 text-muted-foreground" />
+              </button>
             )}
             {!user && (
               <Button variant="glass" size="sm" onClick={() => navigate("/auth")} className="font-display text-xs">
@@ -192,10 +207,22 @@ const Index = () => {
                   transition={{ delay: 0.5 }}
                   className="text-center text-xs text-muted-foreground"
                 >
-                  <button onClick={() => navigate("/auth")} className="text-primary hover:underline">
-                    Sign in
-                  </button>{" "}
-                  to save your history & track progress
+                  {guestUploadCount >= 1 ? (
+                    <span>
+                      Free analysis used.{" "}
+                      <button onClick={() => navigate("/auth")} className="text-primary hover:underline font-semibold">
+                        Sign in
+                      </button>{" "}
+                      to continue
+                    </span>
+                  ) : (
+                    <span>
+                      <button onClick={() => navigate("/auth")} className="text-primary hover:underline">
+                        Sign in
+                      </button>{" "}
+                      to save your results
+                    </span>
+                  )}
                 </motion.p>
               )}
             </motion.div>
@@ -242,12 +269,7 @@ const Index = () => {
                 <Button variant="glass" onClick={reset} className="font-display">
                   Analyze Another Photo
                 </Button>
-                {user && (
-                  <Button variant="glass" onClick={() => navigate("/history")} className="font-display">
-                    <History className="w-4 h-4" />
-                    View History
-                  </Button>
-                )}
+
               </div>
             </motion.div>
           )}

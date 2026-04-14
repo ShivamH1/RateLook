@@ -1,8 +1,8 @@
-# Welcome to your Lovable project
+# RateLook – AI Aesthetic Analysis
+AI-powered aesthetic analysis and confidence coaching.
 
 ## Project info
-
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+**Name**: RateLook
 
 ## How can I edit this code?
 

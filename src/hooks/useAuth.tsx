@@ -69,12 +69,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signOut = async () => {
-    const res = await fetch(`${API_URL}/auth/signout`, {
-      method: "POST",
-      credentials: "include",
-    });
-    if (!res.ok) throw new Error("Signout failed");
-    setUser(null);
+    try {
+      await fetch(`${API_URL}/auth/signout`, {
+        method: "POST",
+        credentials: "include",
+      });
+    } catch (err) {
+      console.error("Signout error:", err);
+    } finally {
+      setUser(null);
+    }
   };
 
   return (

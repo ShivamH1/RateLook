@@ -57,28 +57,28 @@ const PhotoUpload = ({ onPhotoSelected }: PhotoUploadProps) => {
               }}
               onDragLeave={() => setDragOver(false)}
               onDrop={handleDrop}
-              className={`relative flex flex-col items-center justify-center aspect-[3/4] rounded-2xl border-2 border-dashed cursor-pointer transition-all duration-300 ${
+              className={`group relative flex flex-col items-center justify-center aspect-[3/4] rounded-2xl border-2 border-dashed cursor-pointer transition-all duration-300 ${
                 dragOver
                   ? "border-primary bg-primary/5 shadow-glow"
                   : "border-border hover:border-primary/50 bg-surface"
               }`}
             >
               {/* Guide overlay */}
-              <div className="absolute inset-6 rounded-xl border border-muted-foreground/20 pointer-events-none">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-3 py-1 rounded-full bg-surface text-xs text-muted-foreground">
+              <div className="absolute inset-6 rounded-xl border border-muted-foreground/20 pointer-events-none transition-colors group-hover:border-primary/30">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-3 py-1 rounded-full bg-surface text-xs text-muted-foreground transition-colors group-hover:text-primary/70">
                   Face here
                 </div>
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-24 h-32 rounded-full border border-muted-foreground/15" />
+                  <div className="w-24 h-32 rounded-full border border-muted-foreground/15 transition-colors group-hover:border-primary/20" />
                 </div>
               </div>
 
               <div className="relative z-10 flex flex-col items-center gap-4 p-8">
-                <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center">
+                <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:bg-primary/20">
                   <Camera className="w-8 h-8 text-primary" />
                 </div>
                 <div className="text-center">
-                  <p className="font-display font-semibold text-foreground">
+                  <p className="font-display font-semibold text-foreground transition-colors group-hover:text-primary">
                     Upload your photo
                   </p>
                   <p className="text-sm text-muted-foreground mt-1">
@@ -86,7 +86,7 @@ const PhotoUpload = ({ onPhotoSelected }: PhotoUploadProps) => {
                   </p>
                 </div>
                 <div className="flex gap-3">
-                  <Button variant="glow" size="sm">
+                  <Button variant="glow" size="sm" className="group-hover:brightness-125 transition-all pointer-events-none">
                     <Upload className="w-4 h-4" />
                     Choose File
                   </Button>
@@ -98,7 +98,7 @@ const PhotoUpload = ({ onPhotoSelected }: PhotoUploadProps) => {
                 accept="image/*"
                 capture="user"
                 onChange={handleInputChange}
-                className="absolute inset-0 opacity-0 cursor-pointer"
+                className="absolute inset-0 opacity-0 cursor-pointer z-20"
               />
             </label>
 
