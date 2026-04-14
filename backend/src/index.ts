@@ -23,11 +23,12 @@ export const app = new Elysia()
   .use(authRoutes)
   .use(analyzePhotoRoutes);
 
-const port = process.env.PORT || 3000;
-app.listen(port);
-
-console.log(
-  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`,
-);
+if (!process.env.VERCEL) {
+  const port = process.env.PORT || 3000;
+  app.listen(port);
+  console.log(
+    `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`,
+  );
+}
 
 export default app;
