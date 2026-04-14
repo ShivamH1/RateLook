@@ -1,73 +1,78 @@
 # RateLook – AI Aesthetic Analysis
-AI-powered aesthetic analysis and confidence coaching.
 
-## Project info
-**Name**: RateLook
+RateLook is a premium AI-powered aesthetic analysis platform that provides objective feedback on grooming, style, and posture, along with personalized recommendations to boost your confidence.
 
-## How can I edit this code?
+![RateLook Logo](public/logo.png)
 
-There are several ways of editing your application.
+## 🚀 Features
 
-**Use Lovable**
+- **AI Aesthetic Analysis**: Objective scoring (0-100) across Grooming, Style, and Posture.
+- **Smart Recommendations**: Tailored advice on outfits, accessories, and grooming.
+- **Confidence Boosters**: AI-identified strengths to build your self-image.
+- **Guest Flow**: One free analysis for new visitors.
+- **Secure Authentication**: User accounts to unlock unlimited analyses.
+- **Privacy First**: Analysis is private and secure.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+## 🛠️ Tech Stack
 
-Changes made via Lovable will be committed automatically to this repo.
+### Frontend
+- **Framework**: React 18 with Vite
+- **Styling**: Tailwind CSS + shadcn/ui
+- **Animations**: Framer Motion
+- **Icons**: Lucide React
+- **State Management**: React Context (Auth)
 
-**Use your preferred IDE**
+### Backend
+- **Framework**: [ElysiaJS](https://elysiajs.com/) (Bun runtime)
+- **Database**: PostgreSQL with [Drizzle ORM](https://orm.drizzle.team/)
+- **AI**: Google Gemini (via AI Gateway/OpenAI compatible API)
+- **Auth**: JWT with HttpOnly Cookies
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## 🏁 Getting Started
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Prerequisites
+- [Bun](https://bun.sh/) installed on your machine.
+- A PostgreSQL database.
+- A Gemini API Key.
 
-Follow these steps:
-
+### 1. Clone the repository
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+git clone https://github.com/ShivamH1/RateLook.git
+cd RateLook
 ```
 
-**Edit a file directly in GitHub**
+### 2. Backend Setup
+```sh
+cd backend
+bun install
+```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Create a `.env` file in the `backend` directory:
+```env
+DATABASE_URL="postgres://user:password@localhost:5432/ratelook"
+JWT_SECRET="your-secret-key"
+GEMINI_API_KEY="your-gemini-api-key"
+```
 
-**Use GitHub Codespaces**
+Push the database schema:
+```sh
+bun run db:push
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Start the backend:
+```sh
+bun run dev
+```
 
-## What technologies are used for this project?
+### 3. Frontend Setup
+```sh
+# From the root directory
+bun install
+bun dev
+```
 
-This project is built with:
+The application will be available at `http://localhost:8080`.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 📄 License
 
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+This project is licensed under the MIT License.
